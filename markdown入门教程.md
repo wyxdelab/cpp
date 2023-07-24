@@ -15,10 +15,10 @@
 
 ## 插入公式  ，frac是分数格式
 $$
-\lim_{x \to \infin}\frac{sin(x)}{x}=1
+\lim_{x \to \infty}\frac{sin(x)}{x}=1
 $$
 ## 在插入位置ctrl+m
-在一行文字中插入 $\lim_{x\to\infin}\frac{sin(x)}{x}=1$ 公式
+在一行文字中插入 $\lim_{x\to \infty }\frac{sin(x)}{x}=1$ 公式
 
 ## 表格(alt+shift+f)调整书写结构，更加美观
 | 表头 | 表头 | 表头 |
