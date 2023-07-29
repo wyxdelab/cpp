@@ -203,3 +203,44 @@ vector<int> v(begin(arr),end(arr)); //可用于将数组拷贝至vector
 using int_array int[4]; //sizeof(int_array)=16,int_array代表整个数组
 int arr[]={1,2};  //sizeof(arr)=8，arr代表一个指针
 ```
+# 左值和右值
+**左值：对象的值(内容)**
+**右值：对象的身份(在内存中的位置)**
+**左值可以代替右值，右值不可以代替左值。**
+凡是涉及到内存的操作，均需要用到左值。
+如：取地址符、下标运算符、解引用符、迭代器递增/减。
+## decltype关键字对于左值和右值的不同
+```c++
+int *p;
+int q;
+decltype(*p); //返回值为int&，*p可以看作左值。
+decltype(q); //返回值为int，q可以看作右值。
+```
+# 强制类型转换
+**强制类型转换符号后的表达式一定要带括号。**
+## static_cast
+用于非const类型的强制转换，一般是大类型向小类型转换。
+```c++
+double slope = static_cast<double> (j)/i;
+```
+## const_cast
+用于const类型的强制转换。const->非const
+```c++
+const char *pc;
+char *p = const_cast<char *> (pc); //正确
+const_cast<string> (pc); //错误，因为const_cast只能改变const，而不能改变类型。
+```
+# try语句块和异常处理
+## throw表达式
+```c++
+throw runtime_error("Data must refer to same ISBN"); //抛出runtime_error异常。暂停程序运行。
+```
+## try语句块
+```c++
+try{
+    program-statment
+    throw runtime_error()  //程序代码执行失败，throw抛出异常。
+}   catch(runtime_error error //异常类型的声明){
+    //对异常情况进行处理。
+}
+```
