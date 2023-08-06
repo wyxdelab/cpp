@@ -230,11 +230,14 @@ decltype(q); //返回值为int，q可以看作右值。
 double slope = static_cast<double> (j)/i;
 ```
 ## const_cast
-用于const类型的强制转换。const->非const
+用于const类型的强制转换。
 ```c++
 const char *pc;
+//const->非const
 char *p = const_cast<char *> (pc); //正确
 const_cast<string> (pc); //错误，因为const_cast只能改变const，而不能改变类型。
+//非const->const
+const_cast<const char*>(p); //将非const的p转换为const的p。
 ```
 # try语句块和异常处理
 ## throw表达式
