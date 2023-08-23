@@ -128,3 +128,93 @@ void f2(){
     func();     //调用func(0,'#'); 因为此作用域中的i和函数列表中实参i不是同一个变量，所以函数调用时，i不变。
 }
 ```
+# 内联函数和constexpr函数
+## 内联函数
+与普通函数的区别，在返回值之前添加inline。
+内联函数的优点：
+将函数体替代函数调用从而插入调用函数的位置，节省函数调用的时间开销。
+```c++
+inline const string & shorterString(const string &s1, const string &s2){
+    return s1.size()<=s2.size()?s1:s2;
+}
+//此例中是将return 后的语句插入到调用函数的位置。
+```
+## constexpr函数
+当使用constexpr修饰函数调用的返回值时，有两种情况：
+1. 当变量名置为常量时，那么在编译时便可以直接得到得到函数调用的值，不需要等到函数运行时再得出结果。
+2. 当变量名是变量时，那么编译时不能得到函数调用的值，需要等到函数运行时得出结果。
+```c++
+constexpr int func(int i){
+    return i;
+}
+int main(){
+    int i=2;
+    int arr[func(i)];   //constexpr没有起到作用，和普通函数一样。
+    int arr[func(2)];   //func()在编译时就解析出结果。
+}
+```
+相比于普通函数重定义报错的问题，内联函数和constexpr函数可以进行重定义而不会报错，同时为了在函数预处理头文件时直接解析出函数体，可以将函数的定义在头文件中。如果只将内联函数的声明放在头文件中，那么内联就不起作用了。
+需要注意的是，
+内联函数和constexpr函数的定义必须分别相同。
+## assert 预处理宏
+定义在cassert头文件中
+```c++
+assert(expr);   //expr表达式为真，什么都不做。expr表达式为假时，报错终止程序运行。
+```
+NDEBUG是预处理变量
+如果在main文件开头定义了NDEBUG
+```c++
+#define NDEBUG
+```
+则再下列情况中assert会有不同的执行情况。
+```c++
+int main(){
+    #ifndef NDEBUG
+    assert(0);  //assert不执行，程序不会中断运行。
+    #endif  
+}
+```
+当main文件中没有定义NDEBUG时，上述程序就会再assert(0)处停止运行。
+# 函数指针
+```c++
+int (*p)(int i,int j);
+p=q;    //p和q的返回值类型和参数类型数量必须相同。
+p=&q;   //与上一行等价。
+cout<<(*p)(1,2)<<endl;
+cout<<p(1,2)<<endl; //上一行与此行执行效果一致。
+```
+## 重载函数的指针
+```c++
+void ff(int *);
+void ff(int);
+void (*pf)(int)=ff; //pf指向ff(int)
+void (*pf)(int *)=ff;   //pf指向ff(int *)
+void (*pf)(char)=ff;    //报错，没有与ff的参数列表匹配
+int (*pf)(int)=ff;  //报错，没有与ff的返回值匹配
+```
+## 函数指针作为形参
+```c++
+void useBigger(const string &s1,const string &s2,bool pf(const string &,const string &));   //函数名pf被自动转换为函数指针
+void useBigger(const string &s1,const string &s2,bool (*pf)(const string &,const string &));    //显式定义函数指针
+```
+## 类型别名简化函数
+```c++
+using F=int(int,int);   //F是函数名
+using FF=int(*)(int,int);   //FF是函数指针
+```
+一般简化的函数是已经声明和定义过的函数，从而方便函数指针的初始化
+```c++
+int q(int i,int j){
+    return i+j;
+}
+using F=int(int,int);
+F *f=q; //此处必须加*，因为f返回函数指针，F是函数类型，不是函数指针类型
+
+using F=int(*)(int,int);
+F f=q;  //此处不加*，因为F是函数指针类型，f也是返回函数指针
+```
+除了使用using简化函数，还可以使用decltype
+```c++
+int ufn(int,int);
+decltype(ufn) *f;   //decltype(ufn)表示ufn这个函数类型，这里是定义一个函数指针f，指向ufn的函数类型的函数。
+```
