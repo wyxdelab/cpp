@@ -59,7 +59,7 @@ istream &read(istream &is){
 在类内部定义友元函数，则该函数被隐式定义为inline函数
 友元的弊端：破坏了封装性。
 ## 可变数据成员
-当成员函数是const类型时，函数体内不可以修改普通的private数据成员，但是可以修改可变的private数据成员。
+当成员函数是const类型时，函数体内不可以修改普通的private数据成员，但是可以修改可变(mutable)的private数据成员。
 ```c++
 class Screen{
 public:
